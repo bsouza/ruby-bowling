@@ -17,13 +17,18 @@ RSpec.describe "Game" do
   end
 
   it "should add points of 4 throws when have no marks" do
-    do_throws([5, 4, 9, 6])
-    game_score_should_be 24
+    do_throws([5, 4, 3, 6])
+    game_score_should_be 18
   end
 
   it "should be able to get score from specific Frame" do
     do_throws([5, 4])
     expect_frame(1).to equal(9)
+  end
+
+  it "should be able to handle spare points" do
+    do_throws([3, 7, 3])
+    expect_frame(1).to equal(13)
   end
 
   private
