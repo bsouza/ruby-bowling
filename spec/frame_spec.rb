@@ -7,7 +7,19 @@ RSpec.describe "Frame" do
   end
 
   it "should have 0 score when there were no throws" do
-    expect(@frame.score).to equal(0)
+    score_should_be_equal(0)
+  end
+
+  it "should have score after first throw" do
+    @frame.add(5)
+    score_should_be_equal(5)
+  end
+
+
+private
+
+  def score_should_be_equal(expected_score)
+    expect(@frame.score).to equal(expected_score)
   end
 
 end
