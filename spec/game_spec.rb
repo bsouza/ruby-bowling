@@ -9,16 +9,19 @@ RSpec.describe "Game" do
   it "should have scored 5 points after knock down 5 pins" do
     @game.add(5)
     game_score_should_be 5
+    current_frame_should_be 1
   end
 
   it "should have scored 9 points after one throw of 5 pins and other of 4 pins" do
     do_throws([5, 4])
     game_score_should_be 9
+    current_frame_should_be 1
   end
 
   it "should add points of 4 throws when have no marks" do
     do_throws([5, 4, 3, 6])
     game_score_should_be 18
+    current_frame_should_be 2
   end
 
   it "should be able to get score from specific Frame" do
@@ -43,6 +46,10 @@ RSpec.describe "Game" do
 
     def game_score_should_be(expected_score)
       expect(@game.score).to equal(expected_score)
+    end
+
+    def current_frame_should_be(_throw)
+      expect(@game.current_frame).to equal(_throw)
     end
 
 end
