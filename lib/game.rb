@@ -1,12 +1,12 @@
 class Game
 
-  attr_accessor :score, :current_frame
+  attr_accessor :current_frame
 
   def initialize
     @score = 0
     @throws = []
     @current_throw = 0
-    @current_frame = 0
+    @current_frame = 1
     @is_first_throw = true
   end
 
@@ -19,10 +19,11 @@ class Game
   end
 
   def score_for_frame(the_frame)
-    ball = 1
+    ball = 0
     score = 0
 
     the_frame.times do
+      ball += 1
       first_throw = @throws[ball]
 
       ball += 1
@@ -39,14 +40,18 @@ class Game
     score
   end
 
+  def score
+    score_for_frame(@current_frame - 1)
+  end
+
 private
 
   def adjust_current_frame
     if @is_first_throw
       @is_first_throw = false
-      @current_frame += 1
     else
       @is_first_throw = true
+      @current_frame += 1
     end
   end
 
