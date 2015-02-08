@@ -1,21 +1,26 @@
 class Game
 
-  attr_accessor :score
+  attr_accessor :score, :current_frame
 
   def initialize
     @score = 0
     @throws = []
+    @current_throw = 0
     @current_frame = 0
+    @is_first_throw = true
   end
 
   def add(pins)
-    @current_frame += 1
-    @throws[@current_frame] = pins
+    @current_throw += 1
+    @throws[@current_throw] = pins
     @score += pins
-  end
 
-  def current_frame
-    (@current_frame - 1) / 2 + 1
+    if @is_first_throw
+      @is_first_throw = false
+      @current_frame += 1
+    else
+      @is_first_throw = true
+    end
   end
 
   def score_for_frame(the_frame)
