@@ -44,6 +44,43 @@ RSpec.describe "Game" do
     current_frame_should_be 11
   end
 
+  it "should be able to handle a spare in last throw" do
+    9.times do
+      do_throws 0, 0
+    end
+
+    do_throws 2, 8, 10
+    game_score_should_be 20
+  end
+
+  it "test sample game" do
+    do_throws 1, 4,
+              4, 5,
+              6, 4,
+              5, 5,
+              10,
+              0, 1,
+              7, 3,
+              6, 4,
+              10,
+              2, 8,
+              6
+
+    game_score_should_be 133
+  end
+
+  it "test heart break" do
+    11.times { @game.add 10 }
+    @game.add 9
+    game_score_should_be 299
+  end
+
+  it "test tenth frame spare" do
+    9.times { @game.add 10 }
+    [ 9, 1, 1 ].each { |pins| @game.add pins }
+    game_score_should_be 270
+  end
+
   private
 
     def do_throws(*throws)
