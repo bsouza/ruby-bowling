@@ -1,68 +1,54 @@
+require_relative 'scorer'
+
 class Game
 
-  attr_accessor :current_frame
-
   def initialize
-    @score = 0
-    @throws = []
-    @current_throw = 0
-    @current_frame = 1
+    @current_frame = 0
     @is_first_throw = true
+    @scorer = Scorer.new
   end
 
   def add(pins)
-    @current_throw += 1
-    @throws[@current_throw] = pins
-    @score += pins
-
+    @scorer.add_throw(pins)
     adjust_current_frame pins
   end
 
-  def score_for_frame(the_frame)
-    ball = 0
-    score = 0
-
-    the_frame.times do
-      ball += 1
-      first_throw = @throws[ball]
-
-      if first_throw.equal? 10
-        score += 10 + @throws[ball + 1] + @throws[ball + 2]
-      else
-        ball += 1
-        second_throw = @throws[ball]
-
-        frame_score = first_throw + second_throw
-        score += frame_score
-
-        if (frame_score == 10)
-          score += @throws[ball + 1]
-        end
-      end
-    end
-
-    score
+  def score
+    @scorer.score_for_frame(@current_frame)
   end
 
-  def score
-    score_for_frame(@current_frame - 1)
+  def score_for_frame(the_frame)
+    @scorer.score_for_frame(the_frame)
   end
 
 private
 
-  def adjust_current_frame(pins)
-    if @is_first_throw
-      if pins.equal? 10
-        @current_frame += 1
-      else
-        @is_first_throw = false
-      end
-    else
-      @is_first_throw = true
-      @current_frame += 1
-    end
+  def advance_frame
+    @current_frame += 1
+    @current_frame = 10 if @current_frame > 10
+    @is_first_throw = true
+  end
 
-    @current_frame = 11 if @current_frame > 11
+  def advance_frame_for_strike(pins)
+    is_strike = pins.equal? 10
+    advance_frame if is_strike
+    is_strike ? true : false
+  end
+
+  def strike?(pins)
+    @is_first_throw && 10.equal?(pins)
+  end
+
+  def adjust_current_frame(pins)
+    if last_ball_in_frame?(pins)
+      advance_frame
+    else
+      @is_first_throw = false
+    end
+  end
+
+  def last_ball_in_frame?(pins)
+    strike?(pins) || (!@is_first_throw)
   end
 
 end
